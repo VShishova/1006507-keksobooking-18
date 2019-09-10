@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вера Шишова](https://up.htmlacademy.ru/javascript/18/user/1006507).
-* Наставник: `Неизвестно`.
+* Наставник: [Михаил Пушков](https://htmlacademy.ru/profile/id638545).
 
 ---
 
