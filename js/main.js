@@ -4,6 +4,10 @@ var RENT_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
+var MAX_PRICE = 600;
+var MAX_ROOMS = 6;
+var MAX_GUESTS = 10;
+
 var mapSection = document.querySelector('.map');
 mapSection.classList.remove('map--faded');
 var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -56,10 +60,10 @@ var renderRentsArray = function (elementsNumber) {
       offer: {
         title: 'Предложение ' + i,
         address: '' + locationX + ', ' + locationY,
-        price: Math.round(Math.random() * 600),
+        price: Math.round(Math.random() * MAX_PRICE),
         type: getRandomElement(RENT_TYPES),
-        rooms: Math.round(Math.random() * 6),
-        guests: Math.round(Math.random() * 15),
+        rooms: Math.round(Math.random() * MAX_ROOMS),
+        guests: Math.round(Math.random() * MAX_GUESTS),
         checkin: getRandomElement(CHECK_TIMES),
         checkout: getRandomElement(CHECK_TIMES),
         features: getRandomArray(FEATURES),
