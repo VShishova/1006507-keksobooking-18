@@ -1,12 +1,15 @@
 'use strict';
 
-var RENT_TYPES = ['palace', 'flat', 'house', 'bungalo'];
-var CHECK_TIMES = ['12:00', '13:00', '14:00'];
-var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var RentTypes = ['palace', 'flat', 'house', 'bungalo'];
+var CheckTimes = ['12:00', '13:00', '14:00'];
+var Features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
 var MAX_PRICE = 600;
 var MAX_ROOMS = 6;
 var MAX_GUESTS = 10;
+
+var APPARTMENTS_AMOUNT = 8;
+var PHOTOS_AMOUNT = 15;
 
 var mapSection = document.querySelector('.map');
 mapSection.classList.remove('map--faded');
@@ -17,22 +20,22 @@ var LOC_MAX_X = similarListElement.offsetWidth;
 var LOC_MIN_Y = 130;
 var LOC_MAX_Y = 600;
 
-var generatePhotos = function (num) {
+var generatePhotos = function (arraySize) {
   var arr = [];
-  for (var i = 1; i <= num; i++) {
+  for (var i = 1; i <= arraySize; i++) {
     arr.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
   }
   return arr;
 };
 
-var PHOTOS = generatePhotos(15);
+var Photos = generatePhotos(PHOTOS_AMOUNT);
 
 var getRandomElement = function (arr) {
   var randomElement = Math.floor(Math.random() * arr.length);
   return arr[randomElement];
 };
 
-var getRandomArray = function (arr) {
+var getRandomList = function (arr) {
   var newArr = [];
   var maxElements = Math.floor(Math.random() * arr.length);
 
@@ -46,10 +49,10 @@ var getRandomArray = function (arr) {
   return newArr;
 };
 
-var renderRentsArray = function (elementsNumber) {
-  var rentsArray = [];
+var renderRents = function () {
+  var rents = [];
 
-  for (var i = 1; i <= elementsNumber; i++) {
+  for (var i = 1; i <= APPARTMENTS_AMOUNT; i++) {
     var locationX = Math.round(Math.random() * LOC_MAX_X);
     var locationY = Math.round(LOC_MIN_Y + Math.random() * (LOC_MAX_Y - LOC_MIN_Y));
 
@@ -61,14 +64,14 @@ var renderRentsArray = function (elementsNumber) {
         title: 'Предложение ' + i,
         address: '' + locationX + ', ' + locationY,
         price: Math.round(Math.random() * MAX_PRICE),
-        type: getRandomElement(RENT_TYPES),
+        type: getRandomElement(RentTypes),
         rooms: Math.round(Math.random() * MAX_ROOMS),
         guests: Math.round(Math.random() * MAX_GUESTS),
-        checkin: getRandomElement(CHECK_TIMES),
-        checkout: getRandomElement(CHECK_TIMES),
-        features: getRandomArray(FEATURES),
+        checkin: getRandomElement(CheckTimes),
+        checkout: getRandomElement(CheckTimes),
+        features: getRandomList(Features),
         description: 'Описание ' + i,
-        photos: getRandomArray(PHOTOS)
+        photos: getRandomList(Photos)
       },
       location: {
         x: locationX,
@@ -76,10 +79,10 @@ var renderRentsArray = function (elementsNumber) {
       }
     };
 
-    rentsArray.push(rentsElement);
+    rents.push(rentsElement);
   }
 
-  return rentsArray;
+  return rents;
 };
 
 var renderPin = function (rent) {
@@ -103,4 +106,4 @@ var fillListElement = function (arr) {
   similarListElement.appendChild(fragment);
 };
 
-fillListElement(renderRentsArray(8));
+fillListElement(renderRents());
