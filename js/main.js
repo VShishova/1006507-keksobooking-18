@@ -41,7 +41,7 @@ var generatePhotos = function () {
 };
 
 var renderRents = function () {
-  var rents = [];
+  var rentsList = [];
   var Photos = generatePhotos();
   var locationMaxX = similarPinsListElement.offsetWidth;
 
@@ -72,10 +72,10 @@ var renderRents = function () {
       }
     };
 
-    rents.push(rentsElement);
+    rentsList.push(rentsElement);
   }
 
-  return rents;
+  return rentsList;
 };
 
 var renderPin = function (rent) {
