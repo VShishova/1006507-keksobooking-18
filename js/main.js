@@ -7,29 +7,11 @@ var Features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var MAX_PRICE = 600;
 var MAX_ROOMS = 6;
 var MAX_GUESTS = 10;
-
 var APPARTMENTS_AMOUNT = 8;
-var PHOTOS_AMOUNT = 15;
-
-var mapSection = document.querySelector('.map');
-mapSection.classList.remove('map--faded');
-var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var similarCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-var similarPinsListElement = mapSection.querySelector('.map__pins');
-
-var LOC_MAX_X = similarPinsListElement.offsetWidth;
+var PHOTOS_AMOUNT = 6;
 var LOC_MIN_Y = 130;
 var LOC_MAX_Y = 600;
 
-var generatePhotos = function (arraySize) {
-  var arr = [];
-  for (var i = 1; i <= arraySize; i++) {
-    arr.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
-  }
-  return arr;
-};
-
-var Photos = generatePhotos(PHOTOS_AMOUNT);
 
 var getRandomElement = function (arr) {
   var randomElement = Math.floor(Math.random() * arr.length);
@@ -50,11 +32,21 @@ var getRandomList = function (arr) {
   return newArr;
 };
 
+var generatePhotos = function () {
+  var arr = [];
+  for (var i = 1; i <= PHOTOS_AMOUNT; i++) {
+    arr.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
+  }
+  return arr;
+};
+
 var renderRents = function () {
   var rents = [];
+  var Photos = generatePhotos();
+  var locationMaxX = similarPinsListElement.offsetWidth;
 
   for (var i = 1; i <= APPARTMENTS_AMOUNT; i++) {
-    var locationX = Math.round(Math.random() * LOC_MAX_X);
+    var locationX = Math.round(Math.random() * locationMaxX);
     var locationY = Math.round(LOC_MIN_Y + Math.random() * (LOC_MAX_Y - LOC_MIN_Y));
 
     var rentsElement = {
@@ -86,18 +78,46 @@ var renderRents = function () {
   return rents;
 };
 
-var rents = renderRents();
-
 var renderPin = function (rent) {
   var pinElement = similarPinTemplate.cloneNode(true);
 
-  pinElement.style = 'left: ' + (rent.location.x - pinElement.children[0].width / 2) + 'px; top: ' + (rent.location.y - pinElement.children[0].height) + 'px';
+  pinElement.style.left = '' + (rent.location.x - pinElement.children[0].width / 2) + 'px';
+  pinElement.style.top = '' + (rent.location.y - pinElement.children[0].height) + 'px';
 
   var pinElementImage = pinElement.querySelector('img');
   pinElementImage.src = rent.author.avatar;
   pinElementImage.alt = rent.offer.title;
 
   return pinElement;
+};
+
+var fillPinsListElement = function () {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < rents.length; i++) {
+    fragment.appendChild(renderPin(rents[i]));
+  }
+  similarPinsListElement.appendChild(fragment);
+};
+
+var mapTypesToNames = function (rentType) {
+  var typeName = '';
+
+  switch (rentType) {
+    case 'flat':
+      typeName = 'Квартира';
+      break;
+    case 'bungalo':
+      typeName = 'Бунгало';
+      break;
+    case 'house':
+      typeName = 'Дом';
+      break;
+    case 'palace':
+      typeName = 'Дворец';
+  }
+
+  return typeName;
 };
 
 var fillPopupPhotosList = function (photosListElement, photosList) {
@@ -117,6 +137,16 @@ var fillPopupPhotosList = function (photosListElement, photosList) {
   photosListElement.appendChild(fragment);
 };
 
+var fillPopupFeaturesList = function (featuresListElement, faturesList) {
+  while (featuresListElement.firstChild) {
+    featuresListElement.removeChild(featuresListElement.firstChild);
+  }
+
+  for (var i = 0; i < faturesList.length; i++) {
+    featuresListElement.insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + faturesList[i] + '"></li>');
+  }
+};
+
 var renderCard = function (card) {
   var cardElement = similarCardTemplate.cloneNode(true);
 
@@ -124,51 +154,26 @@ var renderCard = function (card) {
   cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
 
-  var rentType = '';
-  if (card.offer.type === 'flat') {
-    rentType = 'Квартира';
-  } else if (card.offer.type === 'bungalo') {
-    rentType = 'Бунгало';
-  } else if (card.offer.type === 'house') {
-    rentType = 'Дом';
-  } else if (card.offer.type === 'palace') {
-    rentType = 'Дворец';
-  }
-
-  cardElement.querySelector('.popup__type').textContent = rentType;
+  cardElement.querySelector('.popup__type').textContent = mapTypesToNames(card.offer.type);
   cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
-
-  var popupFeaturesElement = cardElement.querySelector('.popup__features');
-  while (popupFeaturesElement.firstChild) {
-    popupFeaturesElement.removeChild(popupFeaturesElement.firstChild);
-  }
-
-  for (var i = 0; i < card.offer.features.length; i++) {
-    popupFeaturesElement.insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + card.offer.features[i] + '"></li>');
-  }
-
+  fillPopupFeaturesList(cardElement.querySelector('.popup__features'), card.offer.features);
   cardElement.querySelector('.popup__description').textContent = card.offer.description;
-
   fillPopupPhotosList(cardElement.querySelector('.popup__photos'), card.offer.photos);
-
   cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
   return cardElement;
 };
 
-var fillPinsListElement = function () {
-  var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < rents.length; i++) {
-    fragment.appendChild(renderPin(rents[i]));
-  }
-  similarPinsListElement.appendChild(fragment);
-};
+var mapSection = document.querySelector('.map');
+mapSection.classList.remove('map--faded');
+
+var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var similarCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var similarPinsListElement = mapSection.querySelector('.map__pins');
+
+var rents = renderRents();
 
 fillPinsListElement();
-
-var cardElement = renderCard(rents[0]);
-mapSection.insertBefore(cardElement, mapSection.querySelector('.map__filters-container'));
-
-
+mapSection.insertBefore(renderCard(rents[0]), mapSection.querySelector('.map__filters-container'));
