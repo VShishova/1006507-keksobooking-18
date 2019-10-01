@@ -7,7 +7,7 @@ var Features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var MAX_PRICE = 600;
 var MAX_ROOMS = 6;
 var MAX_GUESTS = 10;
-var APPARTMENTS_AMOUNT = 8;
+var APPARTMENTS_AMOUNT = 5;
 var PHOTOS_AMOUNT = 6;
 var LOC_MIN_Y = 130;
 var LOC_MAX_Y = 600;
@@ -79,8 +79,8 @@ var renderRents = function (locationMaxX) {
   return rentsList;
 };
 
-var renderPin = function (rent) {
-  var pinElement = similarPinTemplate.cloneNode(true);
+var renderPin = function (rent, pinTemplate) {
+  var pinElement = pinTemplate.cloneNode(true);
 
   pinElement.style.left = '' + (rent.location.x - pinElement.children[0].width / 2) + 'px';
   pinElement.style.top = '' + (rent.location.y - pinElement.children[0].height) + 'px';
@@ -92,13 +92,13 @@ var renderPin = function (rent) {
   return pinElement;
 };
 
-var fillPinsListElement = function (rents) {
+var fillPinsListElement = function (rents, pinsListElement, pinTemplate) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < rents.length; i++) {
-    fragment.appendChild(renderPin(rents[i]));
+    fragment.appendChild(renderPin(rents[i], pinTemplate));
   }
-  similarPinsListElement.appendChild(fragment);
+  pinsListElement.appendChild(fragment);
 };
 
 // var mapTypesToNames = function (rentType) {
@@ -175,19 +175,48 @@ var disableFormFields = function (formElement, disabledState) {
 var fillPinAddress = function (adressInput, pin, dividerY) {
   var locationX = Math.round(pin.offsetLeft + pin.offsetWidth / 2);
   var locationY = Math.round(pin.offsetTop + pin.offsetHeight / dividerY);
+  adressInput.readOnly = true;
   adressInput.value = '' + locationX + ', ' + locationY;
 };
 
-var changePageState = function () {
+var changePageStateActive = function () {
   var rentsList = renderRents(similarPinsListElement.offsetWidth);
+  var roomNumberInput = rentForm.querySelector('#room_number');
+  var capacityInput = rentForm.querySelector('#capacity');
 
   mapSection.classList.remove('map--faded');
   rentForm.classList.remove('ad-form--disabled');
   disableFormFields(rentForm, false);
-  disableFormFields(mapFiltersForm, false);
 
-  fillPinsListElement(rentsList);
+  fillPinsListElement(rentsList, similarPinsListElement, similarPinTemplate);
   fillPinAddress(pinAddressInput, mainPin, 1);
+
+  disableFormFields(mapFiltersForm, false);
+  roomNumberInput.addEventListener('input', onRoomNumberInput(roomNumberInput, capacityInput));
+  capacityInput.addEventListener('input', onCapacityInput(roomNumberInput, capacityInput));
+};
+
+var onRoomNumberInput = function (roomInput, capacityInput) {
+  return checkCapacity(roomInput, capacityInput);
+};
+
+var onCapacityInput = function (roomInput, capacityInput) {
+  return checkCapacity(roomInput, capacityInput);
+};
+
+var checkCapacity = function (roomInput, capacityInput) {
+  return function () {
+    if ((capacityInput.value === '0' && roomInput.value !== '100') ||
+        (capacityInput.value !== '0' && roomInput.value === '100') ||
+        (Number(capacityInput.value) > Number(roomInput.value))) {
+      capacityInput.setCustomValidity('Некорректно указано количество мест!');
+      capacityInput.style = 'border-color: red';
+    } else {
+      capacityInput.setCustomValidity('');
+      capacityInput.style = 'border-color: #d9d9d3';
+    }
+    capacityInput.reportValidity();
+  };
 };
 
 var mapSection = document.querySelector('.map');
@@ -205,11 +234,11 @@ disableFormFields(mapFiltersForm, true);
 fillPinAddress(pinAddressInput, mainPin, 2);
 
 mainPin.addEventListener('mousedown', function () {
-  changePageState();
+  changePageStateActive();
 });
 mainPin.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    changePageState();
+    changePageStateActive();
   }
 });
 
