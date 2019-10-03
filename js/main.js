@@ -180,6 +180,9 @@ var fillPinAddress = function (adressInput, pin, dividerY) {
 };
 
 var changePageStateActive = function () {
+  if (PageActive) {
+    return;
+  }
   var rentsList = renderRents(similarPinsListElement.offsetWidth);
   var roomNumberInput = rentForm.querySelector('#room_number');
   var capacityInput = rentForm.querySelector('#capacity');
@@ -192,19 +195,12 @@ var changePageStateActive = function () {
   fillPinAddress(pinAddressInput, mainPin, 1);
 
   disableFormFields(mapFiltersForm, false);
-  roomNumberInput.addEventListener('input', onRoomNumberInput(roomNumberInput, capacityInput));
-  capacityInput.addEventListener('input', onCapacityInput(roomNumberInput, capacityInput));
+  roomNumberInput.addEventListener('input', onInputCheckCapacity(roomNumberInput, capacityInput));
+  capacityInput.addEventListener('input', onInputCheckCapacity(roomNumberInput, capacityInput));
+  PageActive = true;
 };
 
-var onRoomNumberInput = function (roomInput, capacityInput) {
-  return checkCapacity(roomInput, capacityInput);
-};
-
-var onCapacityInput = function (roomInput, capacityInput) {
-  return checkCapacity(roomInput, capacityInput);
-};
-
-var checkCapacity = function (roomInput, capacityInput) {
+var onInputCheckCapacity = function (roomInput, capacityInput) {
   return function () {
     if ((capacityInput.value === '0' && roomInput.value !== '100') ||
         (capacityInput.value !== '0' && roomInput.value === '100') ||
@@ -228,6 +224,7 @@ var pinAddressInput = rentForm.querySelector('#address');
 var similarPinsListElement = mapSection.querySelector('.map__pins');
 var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // var similarCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var PageActive = false;
 
 disableFormFields(rentForm, true);
 disableFormFields(mapFiltersForm, true);
