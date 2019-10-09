@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var similarPinsListElement = window.map.mapSection.querySelector('.map__pins');
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var renderPin = function (rent) {
@@ -18,15 +17,6 @@
   };
 
   window.pin = {
-    pinsListElement: similarPinsListElement,
-    fillPinsListElement: function () {
-      var fragment = document.createDocumentFragment();
-
-      var rents = window.data.rentsList;
-      for (var i = 0; i < rents.length; i++) {
-        fragment.appendChild(renderPin(rents[i]));
-      }
-      similarPinsListElement.appendChild(fragment);
-    }
+    renderPin: renderPin
   };
 })();

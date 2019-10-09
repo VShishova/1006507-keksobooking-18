@@ -1,17 +1,8 @@
 'use strict';
 
 (function () {
-  var rentForm = document.querySelector('.ad-form');
-  var pinAddressInput = rentForm.querySelector('#address');
-  var roomNumberInput = rentForm.querySelector('#room_number');
-  var capacityInput = rentForm.querySelector('#capacity');
-
-  var fillPinAddress = function (pin, dividerY) {
-    var locationX = Math.round(pin.offsetLeft + pin.offsetWidth / 2);
-    var locationY = Math.round(pin.offsetTop + pin.offsetHeight / dividerY);
-    pinAddressInput.readOnly = true;
-    pinAddressInput.value = '' + locationX + ', ' + locationY;
-  };
+  var roomNumberInput = window.map.rentForm.querySelector('#room_number');
+  var capacityInput = window.map.rentForm.querySelector('#capacity');
 
   var onInputCheckCapacity = function () {
     return function () {
@@ -28,14 +19,6 @@
     };
   };
 
-  window.util.disableFormFields(rentForm, true);
-  fillPinAddress(window.map.mainPin, 2);
-
   roomNumberInput.addEventListener('input', onInputCheckCapacity());
   capacityInput.addEventListener('input', onInputCheckCapacity());
-
-  window.form = {
-    rentForm: rentForm,
-    fillPinAddress: fillPinAddress
-  };
 })();
