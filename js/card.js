@@ -30,7 +30,7 @@
     photosListElement.appendChild(fragment);
   };
 
-  var renderCard = function (card) {
+  var renderCard = function (card, left, top) {
     var cardElement = similarCardTemplate.cloneNode(true);
 
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
@@ -44,6 +44,9 @@
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
     fillPopupPhotosList(cardElement.querySelector('.popup__photos'), card.offer.photos);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
+
+    cardElement.style.left = left;
+    cardElement.style.top = top;
 
     return cardElement;
   };

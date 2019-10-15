@@ -61,12 +61,30 @@
     return typeName;
   };
 
+  var mapTypesToPrice = function (rentType) {
+    var Price = 0;
+
+    switch (rentType) {
+      case 'flat':
+        Price = 1000;
+        break;
+      case 'house':
+        Price = 5000;
+        break;
+      case 'palace':
+        Price = 10000;
+    }
+
+    return Price;
+  };
+
   window.utils = {
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
     getRandomList: getRandomList,
     disableFormFields: disableFormFields,
-    mapTypesToNames: mapTypesToNames
+    mapTypesToNames: mapTypesToNames,
+    mapTypesToPrice: mapTypesToPrice
   };
 })();
