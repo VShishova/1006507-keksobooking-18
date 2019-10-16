@@ -39,7 +39,7 @@
   roomNumberInput.addEventListener('input', onInputCheckCapacity);
   capacityInput.addEventListener('input', onInputCheckCapacity);
   typeInput.addEventListener('input', onInputCheckPrice);
-  priceInput.addEventListener('input', onInputCheckPrice);
+  priceInput.addEventListener('blur', onInputCheckPrice);
   timeInInput.addEventListener('input', function () {
     changeTime(timeInInput, timeOutInput);
   });
