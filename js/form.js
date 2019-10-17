@@ -23,13 +23,15 @@
 
   var onInputCheckPrice = function () {
     var minPrice = window.utils.mapTypesToPrice(typeInput.value);
+
+    priceInput.placeholder = minPrice;
+    priceInput.min = minPrice;
+
     if (priceInput.value < minPrice) {
-      priceInput.placeholder = minPrice;
       priceInput.setCustomValidity('Для данного типа жилья минимальная цена: ' + minPrice);
     } else {
       priceInput.setCustomValidity('');
     }
-    priceInput.reportValidity();
   };
 
   var changeTime = function (recentField, changeField) {
