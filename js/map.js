@@ -25,6 +25,7 @@
     for (var i = 0; i < rents.length; i++) {
       fragment.appendChild(window.pin.renderPin(rents[i]));
     }
+
     similarPinsListElement.appendChild(fragment);
   };
 
@@ -39,8 +40,6 @@
     fillPinAddress(1);
 
     window.utils.disableFormFields(mapFiltersForm, false);
-
-    // mapSection.insertBefore(window.card.renderCard(rentsList[0]), mapSection.querySelector('.map__filters-container'));
 
     PageActive = true;
   };

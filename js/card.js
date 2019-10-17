@@ -30,8 +30,22 @@
     photosListElement.appendChild(fragment);
   };
 
+  var onPopupEscPress = function (rentCard) {
+    return function (evt) {
+      window.utils.onEscEvent(evt, function () {
+        closeCardPopup(rentCard);
+      });
+    };
+  };
+
+  var closeCardPopup = function (rentCard) {
+    rentCard.remove();
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
   var renderCard = function (card) {
     var cardElement = similarCardTemplate.cloneNode(true);
+    var rentCardClose = cardElement.querySelector('.popup__close');
 
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
@@ -44,6 +58,16 @@
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
     fillPopupPhotosList(cardElement.querySelector('.popup__photos'), card.offer.photos);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
+
+    rentCardClose.addEventListener('click', function () {
+      closeCardPopup(cardElement);
+    });
+    rentCardClose.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        closeCardPopup(cardElement);
+      });
+    });
+    document.addEventListener('keydown', onPopupEscPress(cardElement));
 
     return cardElement;
   };
