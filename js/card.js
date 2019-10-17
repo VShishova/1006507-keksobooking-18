@@ -43,7 +43,7 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var renderCard = function (card, left, top) {
+  var renderCard = function (card) {
     var cardElement = similarCardTemplate.cloneNode(true);
     var rentCardClose = cardElement.querySelector('.popup__close');
 
@@ -58,9 +58,6 @@
     cardElement.querySelector('.popup__description').textContent = card.offer.description;
     fillPopupPhotosList(cardElement.querySelector('.popup__photos'), card.offer.photos);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
-
-    cardElement.style.left = left;
-    cardElement.style.top = top;
 
     rentCardClose.addEventListener('click', function () {
       closeCardPopup(cardElement);

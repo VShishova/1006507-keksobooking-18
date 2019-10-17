@@ -16,7 +16,7 @@
       rentCard.remove();
     }
 
-    rentCard = window.card.renderCard(rent, pinButton.style.left, pinButton.style.top);
+    rentCard = window.card.renderCard(rent);
     window.map.mapSection.insertBefore(rentCard, window.map.mapSection.querySelector('.map__filters-container'));
   };
 
