@@ -1,12 +1,16 @@
 'use strict';
 
 (function () {
-
   var mapSection = document.querySelector('.map');
-  var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
-  var similarPinsListElement = mapSection.querySelector('.map__pins');
 
+  var LOC_MIN_Y = 130;
+  var LOC_MAX_Y = 600;
+  var LOC_MIN_X = mainPin.offsetWidth;
+  var LOC_MAX_X = mapSection.querySelector('.map__pins').offsetWidth;
+
+  var mapFiltersForm = document.querySelector('.map__filters');
+  var similarPinsListElement = mapSection.querySelector('.map__pins');
   var rentForm = document.querySelector('.ad-form');
   var pinAddressInput = rentForm.querySelector('#address');
 
@@ -44,12 +48,55 @@
     PageActive = true;
   };
 
+  var moveMainPin = function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.pageX,
+      y: evt.pageY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: 0,
+        y: 0
+      };
+
+      if (moveEvt.pageX > LOC_MIN_X && moveEvt.pageX < LOC_MAX_X) {
+        shift.x = startCoords.x - moveEvt.pageX;
+        startCoords.x = moveEvt.pageX;
+      }
+
+      if (moveEvt.pageY > LOC_MIN_Y && moveEvt.pageY < LOC_MAX_Y) {
+        shift.y = startCoords.y - moveEvt.pageY;
+        startCoords.y = moveEvt.pageY;
+      }
+
+      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      fillPinAddress(1);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+
   window.utils.disableFormFields(mapFiltersForm, true);
   window.utils.disableFormFields(rentForm, true);
   fillPinAddress(2);
 
-  mainPin.addEventListener('mousedown', function () {
-    if (!PageActive) {
+  mainPin.addEventListener('mousedown', function (evt) {
+    if (PageActive) {
+      moveMainPin(evt);
+    } else {
       changePageStateActive();
     }
   });
@@ -62,6 +109,9 @@
 
   window.map = {
     mapSection: mapSection,
-    rentForm: rentForm
+    rentForm: rentForm,
+    LOC_MIN_Y: LOC_MIN_Y,
+    LOC_MAX_Y: LOC_MAX_Y,
+    LOC_MAX_X: LOC_MAX_X
   };
 })();

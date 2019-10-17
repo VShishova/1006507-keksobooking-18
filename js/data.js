@@ -10,9 +10,6 @@
   var MAX_GUESTS = 10;
   var APPARTMENTS_AMOUNT = 5;
   var PHOTOS_AMOUNT = 6;
-  var LOC_MIN_Y = 130;
-  var LOC_MAX_Y = 600;
-  var LOC_MAX_X = window.map.mapSection.querySelector('.map__pins').offsetWidth;
 
   var generatePhotos = function () {
     var arr = [];
@@ -27,8 +24,8 @@
     var photos = generatePhotos();
 
     for (var i = 1; i <= APPARTMENTS_AMOUNT; i++) {
-      var locationX = Math.round(Math.random() * LOC_MAX_X);
-      var locationY = Math.round(LOC_MIN_Y + Math.random() * (LOC_MAX_Y - LOC_MIN_Y));
+      var locationX = Math.round(Math.random() * window.map.LOC_MAX_X);
+      var locationY = Math.round(window.map.LOC_MIN_Y + Math.random() * (window.map.LOC_MAX_Y - window.map.LOC_MIN_Y));
 
       var rentsElement = {
         author: {
