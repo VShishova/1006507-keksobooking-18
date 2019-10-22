@@ -3,11 +3,12 @@
 (function () {
   var mapSection = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
+  var pseudoAfterHeight = Number(window.getComputedStyle(mainPin, ':after').height.replace('px', ''));
 
-  var LOC_MIN_Y = 130;
-  var LOC_MAX_Y = 600;
-  var LOC_MIN_X = mainPin.offsetWidth;
-  var LOC_MAX_X = mapSection.querySelector('.map__pins').offsetWidth;
+  var LOC_MIN_Y = 130 - mainPin.offsetHeight - pseudoAfterHeight;
+  var LOC_MAX_Y = 630 - mainPin.offsetHeight - pseudoAfterHeight;
+  var LOC_MIN_X = 0 - Math.round(mainPin.offsetWidth / 2);
+  var LOC_MAX_X = mapSection.querySelector('.map__pins').clientWidth - Math.round(mainPin.offsetWidth / 2);
 
   var mapFiltersForm = document.querySelector('.map__filters');
   var similarPinsListElement = mapSection.querySelector('.map__pins');
@@ -16,9 +17,10 @@
 
   var PageActive = false;
 
-  var fillPinAddress = function (dividerY) {
+  var fillPinAddress = function (pageActive) {
     var locationX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-    var locationY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / dividerY);
+    var locationY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / (pageActive ? 1 : 2) + (pageActive ? pseudoAfterHeight : 0));
+
     pinAddressInput.readOnly = true;
     pinAddressInput.value = '' + locationX + ', ' + locationY;
   };
@@ -41,7 +43,7 @@
     window.utils.disableFormFields(rentForm, false);
 
     fillPinsListElement(rentsList);
-    fillPinAddress(1);
+    fillPinAddress(true);
 
     window.utils.disableFormFields(mapFiltersForm, false);
 
@@ -52,31 +54,37 @@
     evt.preventDefault();
 
     var startCoords = {
-      x: evt.pageX,
-      y: evt.pageY
+      x: evt.clientX,
+      y: evt.clientY
     };
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
-        x: 0,
-        y: 0
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
       };
 
-      if (moveEvt.pageX > LOC_MIN_X && moveEvt.pageX < LOC_MAX_X) {
-        shift.x = startCoords.x - moveEvt.pageX;
-        startCoords.x = moveEvt.pageX;
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var newСoordinates = {
+        x: mainPin.offsetLeft - shift.x,
+        y: mainPin.offsetTop - shift.y,
+      };
+
+      if (newСoordinates.x >= LOC_MIN_X && newСoordinates.x <= LOC_MAX_X) {
+        mainPin.style.left = newСoordinates.x + 'px';
       }
 
-      if (moveEvt.pageY > LOC_MIN_Y && moveEvt.pageY < LOC_MAX_Y) {
-        shift.y = startCoords.y - moveEvt.pageY;
-        startCoords.y = moveEvt.pageY;
+      if (newСoordinates.y >= LOC_MIN_Y && newСoordinates.y <= LOC_MAX_Y) {
+        mainPin.style.top = newСoordinates.y + 'px';
       }
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      fillPinAddress(1);
+      fillPinAddress(true);
     };
 
     var onMouseUp = function (upEvt) {
@@ -91,7 +99,7 @@
 
   window.utils.disableFormFields(mapFiltersForm, true);
   window.utils.disableFormFields(rentForm, true);
-  fillPinAddress(2);
+  fillPinAddress(false);
 
   mainPin.addEventListener('mousedown', function (evt) {
     if (PageActive) {
