@@ -44,7 +44,8 @@
   var fillPinsListElement = function (rents) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < MAX_RENTS_NUMBER; i++) {
+    var rentsNumber = Math.min(rents.length, MAX_RENTS_NUMBER);
+    for (var i = 0; i < rentsNumber; i++) {
       fragment.appendChild(window.pin.renderPin(rents[i]));
     }
 
