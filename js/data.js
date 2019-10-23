@@ -1,62 +1,39 @@
 'use strict';
 
 (function () {
-  var RentTypes = ['palace', 'flat', 'house', 'bungalo'];
-  var CheckTimes = ['12:00', '13:00', '14:00'];
-  var Features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var URL = 'https://js.dump.academy/keksobooking';
+  var TIMEOUT = 10000;
 
-  var MAX_PRICE = 600;
-  var MAX_ROOMS = 6;
-  var MAX_GUESTS = 10;
-  var APPARTMENTS_AMOUNT = 5;
-  var PHOTOS_AMOUNT = 6;
+  var requestConstructor = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.timeout = TIMEOUT;
 
-  var generatePhotos = function () {
-    var arr = [];
-    for (var i = 1; i <= PHOTOS_AMOUNT; i++) {
-      arr.push('http://o0.github.io/assets/images/tokyo/hotel' + i + '.jpg');
-    }
-    return arr;
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    return xhr;
   };
 
-  var renderRents = function () {
-    var rentsList = [];
-    var photos = generatePhotos();
+  var load = function (onLoad, onError) {
+    var xhr = requestConstructor(onLoad, onError);
 
-    for (var i = 1; i <= APPARTMENTS_AMOUNT; i++) {
-      var locationX = Math.round(Math.random() * window.map.LOC_MAX_X);
-      var locationY = Math.round(window.map.LOC_MIN_Y + Math.random() * (window.map.LOC_MAX_Y - window.map.LOC_MIN_Y));
-
-      var rentsElement = {
-        author: {
-          avatar: 'img/avatars/user0' + i + '.png'
-        },
-        offer: {
-          title: 'Предложение ' + i,
-          address: '' + locationX + ', ' + locationY,
-          price: Math.round(Math.random() * MAX_PRICE),
-          type: window.utils.getRandomElement(RentTypes),
-          rooms: Math.round(Math.random() * MAX_ROOMS),
-          guests: Math.round(Math.random() * MAX_GUESTS),
-          checkin: window.utils.getRandomElement(CheckTimes),
-          checkout: window.utils.getRandomElement(CheckTimes),
-          features: window.utils.getRandomList(Features),
-          description: 'Описание ' + i,
-          photos: window.utils.getRandomList(photos)
-        },
-        location: {
-          x: locationX,
-          y: locationY
-        }
-      };
-
-      rentsList.push(rentsElement);
-    }
-
-    return rentsList;
+    xhr.open('GET', URL + '/data');
+    xhr.send();
   };
 
   window.data = {
-    renderRents: renderRents
+    load: load
   };
 })();

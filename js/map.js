@@ -3,12 +3,17 @@
 (function () {
   var mapSection = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
-  var pseudoAfterHeight = Number(window.getComputedStyle(mainPin, ':after').height.replace('px', ''));
 
-  var LOC_MIN_Y = 130 - mainPin.offsetHeight - pseudoAfterHeight;
-  var LOC_MAX_Y = 630 - mainPin.offsetHeight - pseudoAfterHeight;
+  var pinTaleHeight = Number(window.getComputedStyle(mainPin, ':after').height.replace('px', ''));
+  var disabledPinHeight = mainPin.offsetHeight / 2;
+  var activePinHeight = mainPin.offsetHeight + pinTaleHeight;
+
+  var LOC_MIN_Y = 130 - mainPin.offsetHeight - pinTaleHeight;
+  var LOC_MAX_Y = 630 - mainPin.offsetHeight - pinTaleHeight;
   var LOC_MIN_X = 0 - Math.round(mainPin.offsetWidth / 2);
   var LOC_MAX_X = mapSection.querySelector('.map__pins').clientWidth - Math.round(mainPin.offsetWidth / 2);
+
+  var MAX_RENTS_NUMBER = 5;
 
   var mapFiltersForm = document.querySelector('.map__filters');
   var similarPinsListElement = mapSection.querySelector('.map__pins');
@@ -17,9 +22,20 @@
 
   var PageActive = false;
 
+  var onErrorEscPress = function (evt) {
+    window.utils.onEscEvent(evt, closeErrorMessage);
+  };
+
+  var closeErrorMessage = function () {
+    var errorMessage = document.querySelector('.error');
+
+    document.removeEventListener('keydown', onErrorEscPress);
+    errorMessage.remove();
+  };
+
   var fillPinAddress = function (pageActive) {
     var locationX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-    var locationY = Math.round(mainPin.offsetTop + mainPin.offsetHeight / (pageActive ? 1 : 2) + (pageActive ? pseudoAfterHeight : 0));
+    var locationY = Math.round(mainPin.offsetTop + (pageActive ? activePinHeight : disabledPinHeight));
 
     pinAddressInput.readOnly = true;
     pinAddressInput.value = '' + locationX + ', ' + locationY;
@@ -28,24 +44,46 @@
   var fillPinsListElement = function (rents) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < rents.length; i++) {
+    for (var i = 0; i < MAX_RENTS_NUMBER; i++) {
       fragment.appendChild(window.pin.renderPin(rents[i]));
     }
 
     similarPinsListElement.appendChild(fragment);
   };
 
+  var renderErrorMessage = function (errorMessage) {
+    var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+    var errorElement = similarErrorTemplate.cloneNode(true);
+    var errorMessageElement = errorElement.querySelector('.error__message');
+    var errorCloseButton = errorElement.querySelector('.error__button');
+
+    errorMessageElement.textContent = errorMessage;
+    errorCloseButton.addEventListener('click', closeErrorMessage);
+
+    return errorElement;
+  };
+
+  var errorHandler = function (errorMessage) {
+    var mainSection = document.querySelector('main');
+    var errorElement = renderErrorMessage(errorMessage);
+    mainSection.insertAdjacentElement('afterbegin', errorElement);
+
+    document.addEventListener('keydown', onErrorEscPress);
+  };
+
+  var successDataLoadHandler = function (rentsList) {
+    fillPinsListElement(rentsList);
+    window.utils.disableFormFields(mapFiltersForm, false);
+  };
+
   var changePageStateActive = function () {
-    var rentsList = window.data.renderRents();
+    window.data.load(successDataLoadHandler, errorHandler);
 
     mapSection.classList.remove('map--faded');
     rentForm.classList.remove('ad-form--disabled');
     window.utils.disableFormFields(rentForm, false);
-
-    fillPinsListElement(rentsList);
     fillPinAddress(true);
-
-    window.utils.disableFormFields(mapFiltersForm, false);
 
     PageActive = true;
   };
@@ -117,9 +155,6 @@
 
   window.map = {
     mapSection: mapSection,
-    rentForm: rentForm,
-    LOC_MIN_Y: LOC_MIN_Y,
-    LOC_MAX_Y: LOC_MAX_Y,
-    LOC_MAX_X: LOC_MAX_X
+    rentForm: rentForm
   };
 })();
