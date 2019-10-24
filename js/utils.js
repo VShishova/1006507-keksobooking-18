@@ -1,8 +1,24 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
+  var Keycode = {
+    ESC: 27,
+    ENTER: 13
+  };
+
+  var typesToNames = {
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом',
+    'palace': 'Дворец'
+  };
+
+  var typesToPrice = {
+    'flat': 1000,
+    'bungalo': 0,
+    'house': 5000,
+    'palace': 10000
+  };
 
   var getRandomElement = function (arr) {
     var randomNumber = Math.floor(Math.random() * arr.length);
@@ -10,13 +26,13 @@
   };
 
   var onEscEvent = function (evt, action) {
-    if (evt.keyCode === ESC_KEYCODE) {
+    if (evt.keyCode === Keycode.ESC) {
       action();
     }
   };
 
   var onEnterEvent = function (evt, action) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === Keycode.ENTER) {
       action();
     }
   };
@@ -41,50 +57,13 @@
     }
   };
 
-  var mapTypesToNames = function (rentType) {
-    var typeName = '';
-
-    switch (rentType) {
-      case 'flat':
-        typeName = 'Квартира';
-        break;
-      case 'bungalo':
-        typeName = 'Бунгало';
-        break;
-      case 'house':
-        typeName = 'Дом';
-        break;
-      case 'palace':
-        typeName = 'Дворец';
-    }
-
-    return typeName;
-  };
-
-  var mapTypesToPrice = function (rentType) {
-    var Price = 0;
-
-    switch (rentType) {
-      case 'flat':
-        Price = 1000;
-        break;
-      case 'house':
-        Price = 5000;
-        break;
-      case 'palace':
-        Price = 10000;
-    }
-
-    return Price;
-  };
-
   window.utils = {
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
     getRandomList: getRandomList,
     disableFormFields: disableFormFields,
-    mapTypesToNames: mapTypesToNames,
-    mapTypesToPrice: mapTypesToPrice
+    typesToNames: typesToNames,
+    typesToPrice: typesToPrice
   };
 })();

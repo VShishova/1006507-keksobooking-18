@@ -3,6 +3,7 @@
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
   var TIMEOUT = 10000;
+  var SUCESS_CODE = 200;
 
   var requestConstructor = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -10,7 +11,7 @@
     xhr.timeout = TIMEOUT;
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCESS_CODE) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);

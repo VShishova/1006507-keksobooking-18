@@ -22,7 +22,7 @@
   };
 
   var onInputCheckPrice = function () {
-    var minPrice = window.utils.mapTypesToPrice(typeInput.value);
+    var minPrice = window.utils.typesToPrice[typeInput.value];
 
     priceInput.placeholder = minPrice;
     priceInput.min = minPrice;
