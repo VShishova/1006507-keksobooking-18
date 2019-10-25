@@ -13,10 +13,12 @@
     y: mainPin.offsetTop
   };
 
-  var LOC_MIN_Y = 130 - mainPin.offsetHeight - pinTaleHeight;
-  var LOC_MAX_Y = 630 - mainPin.offsetHeight - pinTaleHeight;
-  var LOC_MIN_X = 0 - Math.round(mainPin.offsetWidth / 2);
-  var LOC_MAX_X = mapSection.querySelector('.map__pins').clientWidth - Math.round(mainPin.offsetWidth / 2);
+  var MainPinLocation = {
+    MIN_Y: 130 - mainPin.offsetHeight - pinTaleHeight,
+    MAX_Y: 630 - mainPin.offsetHeight - pinTaleHeight,
+    MIN_X: 0 - Math.round(mainPin.offsetWidth / 2),
+    MAX_X: mapSection.querySelector('.map__pins').clientWidth - Math.round(mainPin.offsetWidth / 2)
+  };
 
   var MAX_RENTS_NUMBER = 5;
 
@@ -147,11 +149,11 @@
         y: mainPin.offsetTop - shift.y,
       };
 
-      if (newСoords.x >= LOC_MIN_X && newСoords.x <= LOC_MAX_X) {
+      if (newСoords.x >= MainPinLocation.MIN_X && newСoords.x <= MainPinLocation.MAX_X) {
         mainPin.style.left = newСoords.x + 'px';
       }
 
-      if (newСoords.y >= LOC_MIN_Y && newСoords.y <= LOC_MAX_Y) {
+      if (newСoords.y >= MainPinLocation.MIN_Y && newСoords.y <= MainPinLocation.MAX_Y) {
         mainPin.style.top = newСoords.y + 'px';
       }
 
