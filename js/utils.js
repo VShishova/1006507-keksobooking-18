@@ -37,33 +37,40 @@
     }
   };
 
-  var getRandomList = function (arr) {
-    var newArr = [];
-    var maxElements = Math.floor(Math.random() * arr.length);
-
-    for (var i = 0; i < maxElements; i++) {
-      var randomElement = getRandomElement(arr);
-      if (!(newArr.includes(randomElement))) {
-        newArr.push(randomElement);
-      }
-    }
-
-    return newArr;
-  };
-
   var disableFormFields = function (formElement, disabledState) {
     for (var i = 0; i < formElement.children.length; i++) {
       formElement.children[i].disabled = disabledState;
     }
   };
 
+  var renderErrorMessage = function (errorMessage, closeErrorMessage) {
+    var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+
+    var errorElement = similarErrorTemplate.cloneNode(true);
+    var errorMessageElement = errorElement.querySelector('.error__message');
+    var errorCloseButton = errorElement.querySelector('.error__button');
+
+    errorMessageElement.textContent = errorMessage;
+    errorCloseButton.addEventListener('click', closeErrorMessage);
+
+    return errorElement;
+  };
+
+  var renderSuccessMessage = function () {
+    var similarSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+    var SuccessElement = similarSuccessTemplate.cloneNode(true);
+
+    return SuccessElement;
+  };
+
   window.utils = {
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
-    getRandomList: getRandomList,
     disableFormFields: disableFormFields,
     typesToNames: typesToNames,
-    typesToPrice: typesToPrice
+    typesToPrice: typesToPrice,
+    renderErrorMessage: renderErrorMessage,
+    renderSuccessMessage: renderSuccessMessage
   };
 })();
