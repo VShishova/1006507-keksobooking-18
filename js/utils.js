@@ -43,24 +43,21 @@
     }
   };
 
-  var renderErrorMessage = function (errorMessage, closeErrorMessage) {
+  var renderErrorMessage = function (errorMessage) {
     var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
     var errorElement = similarErrorTemplate.cloneNode(true);
     var errorMessageElement = errorElement.querySelector('.error__message');
-    var errorCloseButton = errorElement.querySelector('.error__button');
-
     errorMessageElement.textContent = errorMessage;
-    errorCloseButton.addEventListener('click', closeErrorMessage);
 
     return errorElement;
   };
 
   var renderSuccessMessage = function () {
     var similarSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-    var SuccessElement = similarSuccessTemplate.cloneNode(true);
+    var successElement = similarSuccessTemplate.cloneNode(true);
 
-    return SuccessElement;
+    return successElement;
   };
 
   window.utils = {
