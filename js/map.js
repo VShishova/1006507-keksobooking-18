@@ -8,10 +8,7 @@
   var pinTaleHeight = Number(window.getComputedStyle(mainPin, ':after').height.replace('px', ''));
   var disabledPinHeight = mainPin.offsetHeight / 2;
   var activePinHeight = mainPin.offsetHeight + pinTaleHeight;
-  var mainPinStartCoord = {
-    x: mainPin.offsetLeft,
-    y: mainPin.offsetTop
-  };
+  var mainPinStartCoord = new window.utils.Coordinate(mainPin.offsetLeft, mainPin.offsetTop);
 
   var MainPinLocation = {
     MIN_Y: 130 - mainPin.offsetHeight - pinTaleHeight,
@@ -26,7 +23,6 @@
   var pinAddressInput = rentForm.querySelector('#address');
 
   var pageActive;
-  // var rentsData = [];
 
   var onErrorEscPress = function (evt) {
     window.utils.onEscEvent(evt, function () {
@@ -103,24 +99,18 @@
   };
 
   var successDataSaveHandler = function () {
-    var rentCard = mapSection.querySelector('.map__card');
-    var mapPins = mapSection.querySelectorAll('.map__pin');
-
     rentForm.reset();
     mapFiltersForm.reset();
-    if (rentCard) {
-      rentCard.remove();
-    }
 
-    for (var i = mapPins.length - 1; i > 0; i--) {
-      mapPins[i].remove();
-    }
+    window.utils.deleteRentCard();
+    window.utils.deleteMapPins();
 
     mainPin.style.left = mainPinStartCoord.x + 'px';
     mainPin.style.top = mainPinStartCoord.y + 'px';
 
     var successInfoElement = window.utils.renderSuccessMessage();
     mainSection.insertAdjacentElement('afterbegin', successInfoElement);
+    
     document.addEventListener('keydown', onSuccessEscPress);
     document.addEventListener('click', onSuccessClick);
 
@@ -151,28 +141,21 @@
   var moveMainPin = function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new window.utils.Coordinate(evt.clientX, evt.clientY);
+    var shift = new window.utils.Coordinate(0, 0);
+    var newСoords = new window.utils.Coordinate(0, 0);
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      shift.x = startCoords.x - moveEvt.clientX;
+      shift.y = startCoords.y - moveEvt.clientY;
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      startCoords.x = moveEvt.clientX;
+      startCoords.y = moveEvt.clientY;
 
-      var newСoords = {
-        x: mainPin.offsetLeft - shift.x,
-        y: mainPin.offsetTop - shift.y,
-      };
+      newСoords.x = mainPin.offsetLeft - shift.x;
+      newСoords.y = mainPin.offsetTop - shift.y;
 
       if (newСoords.x >= MainPinLocation.MIN_X && newСoords.x <= MainPinLocation.MAX_X) {
         mainPin.style.left = newСoords.x + 'px';

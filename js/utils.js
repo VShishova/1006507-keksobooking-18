@@ -6,6 +6,19 @@
     ENTER: 13
   };
 
+  var MAX_RENTS_NUMBER = 5;
+
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
+  var filtersToFields = {
+    'housing-type': 'type',
+    'housing-rooms': 'rooms',
+    'housing-guests': 'guests'
+  };
+
   var typesToNames = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -60,7 +73,23 @@
     return successElement;
   };
 
+  var deleteRentCard = function () {
+    var rentCard = window.map.mapSection.querySelector('.map__card');
+    if (rentCard) {
+      rentCard.remove();
+    }
+  };
+
+  var deleteMapPins = function () {
+    var mapPins = window.map.mapSection.querySelectorAll('.map__pin');
+    for (var i = mapPins.length - 1; i > 0; i--) {
+      mapPins[i].remove();
+    }
+  };
+
   window.utils = {
+    MAX_RENTS_NUMBER: MAX_RENTS_NUMBER,
+    Coordinate: Coordinate,
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
@@ -68,6 +97,9 @@
     typesToNames: typesToNames,
     typesToPrice: typesToPrice,
     renderErrorMessage: renderErrorMessage,
-    renderSuccessMessage: renderSuccessMessage
+    renderSuccessMessage: renderSuccessMessage,
+    filtersToFields: filtersToFields,
+    deleteRentCard: deleteRentCard,
+    deleteMapPins: deleteMapPins
   };
 })();

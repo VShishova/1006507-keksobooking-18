@@ -1,14 +1,6 @@
 'use strict';
 
 (function () {
-  var MAX_RENTS_NUMBER = 5;
-
-  var filtersToFields = {
-    'housing-type': 'type',
-    'housing-rooms': 'rooms',
-    'housing-guests': 'guests'
-  };
-
   var mapFiltersForm = document.querySelector('.map__filters');
   var housingType = mapFiltersForm.querySelector('#housing-type');
   var housingPrice = mapFiltersForm.querySelector('#housing-price');
@@ -43,12 +35,12 @@
           if (key === 'housing-price') {
             return checkPriceFilter(rent.offer.price, value);
           }
-          return rent.offer[filtersToFields[key]].toString() === value;
+          return rent.offer[window.utils.filtersToFields[key]].toString() === value;
         });
       }
     });
 
-    return filteredRents.slice(0, MAX_RENTS_NUMBER);
+    return filteredRents.slice(0, window.utils.MAX_RENTS_NUMBER);
   };
 
   housingType.addEventListener('input', onFilterInput);
