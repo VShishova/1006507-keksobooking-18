@@ -17,7 +17,8 @@
   var filtersToFields = {
     'housing-type': 'type',
     'housing-rooms': 'rooms',
-    'housing-guests': 'guests'
+    'housing-guests': 'guests',
+    'features': 'features'
   };
 
   var typesToNames = {

@@ -6,6 +6,7 @@
   var housingPrice = mapFiltersForm.querySelector('#housing-price');
   var housingRooms = mapFiltersForm.querySelector('#housing-rooms');
   var housingGuests = mapFiltersForm.querySelector('#housing-guests');
+  var features = Array.from(mapFiltersForm.querySelector('#housing-features').children);
 
   var onFilterInput = function () {
     var filteredRents = filterRents();
@@ -30,13 +31,19 @@
     });
 
     var filters = new FormData(mapFiltersForm);
+
     filters.forEach(function (value, key) {
       if (value !== 'any') {
         filteredRents = filteredRents.filter(function (rent) {
           if (key === 'housing-price') {
             return checkPriceFilter(rent.offer.price, value);
           }
-          return rent.offer[window.utils.filtersToFields[key]].toString() === value;
+          var dataFieldName = window.utils.filtersToFields[key];
+          if (typeof rent.offer[dataFieldName] === 'object') {
+            return rent.offer[dataFieldName].indexOf(value) !== -1;
+          } else {
+            return rent.offer[dataFieldName].toString() === value;
+          }
         });
       }
     });
@@ -48,6 +55,12 @@
   housingPrice.addEventListener('input', window.utils.debounce(onFilterInput));
   housingRooms.addEventListener('input', window.utils.debounce(onFilterInput));
   housingGuests.addEventListener('input', window.utils.debounce(onFilterInput));
+
+  features.forEach(function (feature) {
+    if (feature.tagName.toLowerCase() === 'input') {
+      feature.addEventListener('input', window.utils.debounce(onFilterInput));
+    }
+  });
 
   window.filter = {
     filterRents: filterRents

@@ -3,6 +3,16 @@
 (function () {
   var similarCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
+  var onPopupEscPress = function (evt) {
+    window.utils.onEscEvent(evt, closeCardPopup);
+  };
+
+  var closeCardPopup = function () {
+    window.utils.deleteRentCard();
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+
   var fillPopupFeaturesList = function (featuresListElement, faturesList) {
     while (featuresListElement.firstChild) {
       featuresListElement.removeChild(featuresListElement.firstChild);
@@ -30,19 +40,6 @@
     photosListElement.appendChild(fragment);
   };
 
-  var onPopupEscPress = function (rentCard) {
-    return function (evt) {
-      window.utils.onEscEvent(evt, function () {
-        closeCardPopup(rentCard);
-      });
-    };
-  };
-
-  var closeCardPopup = function (rentCard) {
-    rentCard.remove();
-    document.removeEventListener('keydown', onPopupEscPress);
-  };
-
   var renderCard = function (card) {
     var cardElement = similarCardTemplate.cloneNode(true);
     var rentCardClose = cardElement.querySelector('.popup__close');
@@ -59,15 +56,11 @@
     fillPopupPhotosList(cardElement.querySelector('.popup__photos'), card.offer.photos);
     cardElement.querySelector('.popup__avatar').src = card.author.avatar;
 
-    rentCardClose.addEventListener('click', function () {
-      closeCardPopup(cardElement);
-    });
+    rentCardClose.addEventListener('click', closeCardPopup);
     rentCardClose.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, function () {
-        closeCardPopup(cardElement);
-      });
+      window.util.isEnterEvent(evt, closeCardPopup);
     });
-    document.addEventListener('keydown', onPopupEscPress(cardElement));
+    document.addEventListener('keydown', onPopupEscPress);
 
     return cardElement;
   };
