@@ -6,8 +6,7 @@
     ENTER: 13
   };
 
-  var MAX_RENTS_NUMBER = 5;
-  var DEBOUNCE_INTERVAL = 500;
+  var SUCCESS_CODE = 200;
 
   var Coordinate = function (x, y) {
     this.x = x;
@@ -45,7 +44,7 @@
       }
       lastTimeout = window.setTimeout(function () {
         cb.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
+      }, window.config.DEBOUNCE_INTERVAL);
     };
   };
 
@@ -104,17 +103,17 @@
   };
 
   window.utils = {
-    MAX_RENTS_NUMBER: MAX_RENTS_NUMBER,
+    SUCCESS_CODE: SUCCESS_CODE,
+    typesToNames: typesToNames,
+    typesToPrice: typesToPrice,
+    filtersToFields: filtersToFields,
     Coordinate: Coordinate,
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
     disableFormFields: disableFormFields,
-    typesToNames: typesToNames,
-    typesToPrice: typesToPrice,
     renderErrorMessage: renderErrorMessage,
     renderSuccessMessage: renderSuccessMessage,
-    filtersToFields: filtersToFields,
     deleteRentCard: deleteRentCard,
     deleteMapPins: deleteMapPins,
     debounce: debounce

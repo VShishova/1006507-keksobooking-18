@@ -2,11 +2,8 @@
 
 (function () {
   var mapFiltersForm = document.querySelector('.map__filters');
-  var housingType = mapFiltersForm.querySelector('#housing-type');
-  var housingPrice = mapFiltersForm.querySelector('#housing-price');
-  var housingRooms = mapFiltersForm.querySelector('#housing-rooms');
-  var housingGuests = mapFiltersForm.querySelector('#housing-guests');
-  var features = Array.from(mapFiltersForm.querySelector('#housing-features').children);
+  var selectFilterFields = Array.from(mapFiltersForm.querySelectorAll('select'));
+  var features = Array.from(mapFiltersForm.querySelectorAll('[name=features]'));
 
   var onFilterInput = function () {
     var filteredRents = filterRents();
@@ -27,7 +24,7 @@
 
   var filterRents = function () {
     var filteredRents = window.map.rentsData.filter(function (rent) {
-      return rent.offer;
+      return !!rent.offer && typeof rent.offer === 'object';
     });
 
     var filters = new FormData(mapFiltersForm);
@@ -39,8 +36,8 @@
             return checkPriceFilter(rent.offer.price, value);
           }
           var dataFieldName = window.utils.filtersToFields[key];
-          if (typeof rent.offer[dataFieldName] === 'object') {
-            return rent.offer[dataFieldName].indexOf(value) !== -1;
+          if (typeof rent.offer[dataFieldName] === 'object' && rent.offer[dataFieldName].length > 0) {
+            return rent.offer[dataFieldName].includes(value);
           } else {
             return rent.offer[dataFieldName].toString() === value;
           }
@@ -48,18 +45,11 @@
       }
     });
 
-    return filteredRents.slice(0, window.utils.MAX_RENTS_NUMBER);
+    return filteredRents.slice(0, window.config.MAX_RENTS_NUMBER);
   };
 
-  housingType.addEventListener('input', window.utils.debounce(onFilterInput));
-  housingPrice.addEventListener('input', window.utils.debounce(onFilterInput));
-  housingRooms.addEventListener('input', window.utils.debounce(onFilterInput));
-  housingGuests.addEventListener('input', window.utils.debounce(onFilterInput));
-
-  features.forEach(function (feature) {
-    if (feature.tagName.toLowerCase() === 'input') {
-      feature.addEventListener('input', window.utils.debounce(onFilterInput));
-    }
+  features.concat(selectFilterFields).forEach(function (elem) {
+    elem.addEventListener('input', window.utils.debounce(onFilterInput));
   });
 
   window.filter = {
