@@ -110,7 +110,7 @@
 
     var successInfoElement = window.utils.renderSuccessMessage();
     mainSection.insertAdjacentElement('afterbegin', successInfoElement);
-    
+
     document.addEventListener('keydown', onSuccessEscPress);
     document.addEventListener('click', onSuccessClick);
 
