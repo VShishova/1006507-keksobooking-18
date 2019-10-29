@@ -6,6 +6,21 @@
     ENTER: 13
   };
 
+  var MAX_RENTS_NUMBER = 5;
+  var DEBOUNCE_INTERVAL = 500;
+
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
+  var filtersToFields = {
+    'housing-type': 'type',
+    'housing-rooms': 'rooms',
+    'housing-guests': 'guests',
+    'features': 'features'
+  };
+
   var typesToNames = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -18,6 +33,20 @@
     'bungalo': 0,
     'house': 5000,
     'palace': 10000
+  };
+
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
   };
 
   var getRandomElement = function (arr) {
@@ -43,27 +72,40 @@
     }
   };
 
-  var renderErrorMessage = function (errorMessage, closeErrorMessage) {
+  var renderErrorMessage = function (errorMessage) {
     var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
     var errorElement = similarErrorTemplate.cloneNode(true);
     var errorMessageElement = errorElement.querySelector('.error__message');
-    var errorCloseButton = errorElement.querySelector('.error__button');
-
     errorMessageElement.textContent = errorMessage;
-    errorCloseButton.addEventListener('click', closeErrorMessage);
 
     return errorElement;
   };
 
   var renderSuccessMessage = function () {
     var similarSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-    var SuccessElement = similarSuccessTemplate.cloneNode(true);
+    var successElement = similarSuccessTemplate.cloneNode(true);
 
-    return SuccessElement;
+    return successElement;
+  };
+
+  var deleteRentCard = function () {
+    var rentCard = window.map.mapSection.querySelector('.map__card');
+    if (rentCard) {
+      rentCard.remove();
+    }
+  };
+
+  var deleteMapPins = function () {
+    var mapPins = window.map.mapSection.querySelectorAll('.map__pin');
+    for (var i = mapPins.length - 1; i > 0; i--) {
+      mapPins[i].remove();
+    }
   };
 
   window.utils = {
+    MAX_RENTS_NUMBER: MAX_RENTS_NUMBER,
+    Coordinate: Coordinate,
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
     getRandomElement: getRandomElement,
@@ -71,6 +113,10 @@
     typesToNames: typesToNames,
     typesToPrice: typesToPrice,
     renderErrorMessage: renderErrorMessage,
-    renderSuccessMessage: renderSuccessMessage
+    renderSuccessMessage: renderSuccessMessage,
+    filtersToFields: filtersToFields,
+    deleteRentCard: deleteRentCard,
+    deleteMapPins: deleteMapPins,
+    debounce: debounce
   };
 })();
