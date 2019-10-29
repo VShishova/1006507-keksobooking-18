@@ -165,7 +165,7 @@
         mainPin.style.top = newСoords.y + 'px';
       }
 
-      fillPinAddress(true);
+      fillPinAddress();
     };
 
     var onMouseUp = function (upEvt) {
