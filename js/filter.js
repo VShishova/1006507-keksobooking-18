@@ -9,6 +9,7 @@
 
   var onFilterInput = function () {
     var filteredRents = filterRents();
+    window.utils.deleteRentCard();
     window.map.fillPinsListElement(filteredRents);
   };
 
@@ -43,10 +44,10 @@
     return filteredRents.slice(0, window.utils.MAX_RENTS_NUMBER);
   };
 
-  housingType.addEventListener('input', onFilterInput);
-  housingPrice.addEventListener('input', onFilterInput);
-  housingRooms.addEventListener('input', onFilterInput);
-  housingGuests.addEventListener('input', onFilterInput);
+  housingType.addEventListener('input', window.utils.debounce(onFilterInput));
+  housingPrice.addEventListener('input', window.utils.debounce(onFilterInput));
+  housingRooms.addEventListener('input', window.utils.debounce(onFilterInput));
+  housingGuests.addEventListener('input', window.utils.debounce(onFilterInput));
 
   window.filter = {
     filterRents: filterRents

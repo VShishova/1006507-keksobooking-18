@@ -7,6 +7,7 @@
   };
 
   var MAX_RENTS_NUMBER = 5;
+  var DEBOUNCE_INTERVAL = 500;
 
   var Coordinate = function (x, y) {
     this.x = x;
@@ -31,6 +32,20 @@
     'bungalo': 0,
     'house': 5000,
     'palace': 10000
+  };
+
+  var debounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
   };
 
   var getRandomElement = function (arr) {
@@ -100,6 +115,7 @@
     renderSuccessMessage: renderSuccessMessage,
     filtersToFields: filtersToFields,
     deleteRentCard: deleteRentCard,
-    deleteMapPins: deleteMapPins
+    deleteMapPins: deleteMapPins,
+    debounce: debounce
   };
 })();
