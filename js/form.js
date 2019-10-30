@@ -48,4 +48,8 @@
   timeOutInput.addEventListener('input', function () {
     changeTime(timeOutInput, timeInInput);
   });
+  // window.map.rentForm.addEventListener('invalid', function() {
+  //   console.log('тут');
+  //   debugger
+  // }, false)
 })();

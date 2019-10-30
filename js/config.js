@@ -14,6 +14,8 @@
     MAX_X: document.querySelector('.map__pins').clientWidth
   };
 
+  var PICTURE_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
   var roomsToGuests = {
     '1': {min: 1, max: 1},
     '2': {min: 1, max: 2},
@@ -37,6 +39,7 @@
     DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
     MAX_RENTS_NUMBER: MAX_RENTS_NUMBER,
     MainPinLocation: MainPinLocation,
+    PICTURE_FILE_TYPES: PICTURE_FILE_TYPES,
     roomsToGuests: roomsToGuests,
     typesToMinPrices: typesToMinPrices,
     invalidElementStyle: invalidElementStyle,
