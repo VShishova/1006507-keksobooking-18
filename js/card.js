@@ -12,19 +12,14 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-
   var fillPopupFeaturesList = function (featuresListElement, faturesList) {
-    while (featuresListElement.firstChild) {
-      featuresListElement.removeChild(featuresListElement.firstChild);
-    }
-
+    window.utils.deleteListItems(featuresListElement);
     for (var i = 0; i < faturesList.length; i++) {
       featuresListElement.insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + faturesList[i] + '"></li>');
     }
   };
 
   var fillPopupPhotosList = function (photosListElement, photosList) {
-
     var similarPopupPhotoImage = photosListElement.children[0];
     photosListElement.removeChild(similarPopupPhotoImage);
 
@@ -47,7 +42,6 @@
     cardElement.querySelector('.popup__title').textContent = card.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-
     cardElement.querySelector('.popup__type').textContent = window.utils.typesToNames[card.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;

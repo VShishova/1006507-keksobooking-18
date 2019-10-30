@@ -27,11 +27,10 @@
     'palace': 'Дворец'
   };
 
-  var typesToPrice = {
-    'flat': 1000,
-    'bungalo': 0,
-    'house': 5000,
-    'palace': 10000
+  var pricesToValues = {
+    'low': {min: 0, max: 10000},
+    'middle': {min: 10000, max: 50000},
+    'high': {min: 50000, max: 1000000}
   };
 
   var debounce = function (cb) {
@@ -102,11 +101,20 @@
     }
   };
 
+  var deleteListItems = function (listElement, undeletedFirstElement) {
+    while (listElement.lastChild) {
+      if (listElement.lastChild === undeletedFirstElement) {
+        break;
+      }
+      listElement.removeChild(listElement.lastChild);
+    }
+  };
+
   window.utils = {
     SUCCESS_CODE: SUCCESS_CODE,
     typesToNames: typesToNames,
-    typesToPrice: typesToPrice,
     filtersToFields: filtersToFields,
+    pricesToValues: pricesToValues,
     Coordinate: Coordinate,
     onEscEvent: onEscEvent,
     onEnterEvent: onEnterEvent,
@@ -116,6 +124,7 @@
     renderSuccessMessage: renderSuccessMessage,
     deleteRentCard: deleteRentCard,
     deleteMapPins: deleteMapPins,
-    debounce: debounce
+    debounce: debounce,
+    deleteListItems: deleteListItems
   };
 })();

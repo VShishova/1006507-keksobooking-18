@@ -4,19 +4,15 @@
   var similarPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   var openCardPopup = function (pinButton, rent) {
-    var rentCard = window.map.mapSection.querySelector('.map__card.popup');
     var activePin = window.map.mapSection.querySelector('.map__pin--active');
 
     if (activePin) {
       activePin.classList.remove('map__pin--active');
     }
     pinButton.classList.add('map__pin--active');
+    window.utils.deleteRentCard();
 
-    if (rentCard) {
-      rentCard.remove();
-    }
-
-    rentCard = window.card.renderCard(rent);
+    var rentCard = window.card.renderCard(rent);
     window.map.mapSection.insertBefore(rentCard, window.map.mapSection.querySelector('.map__filters-container'));
   };
 
@@ -33,8 +29,8 @@
     pinElement.addEventListener('click', function () {
       openCardPopup(pinElement, rent);
     });
-    pinElement.addEventListener('keydown', function (evtPin) {
-      window.utils.onEnterEvent(evtPin, function () {
+    pinElement.addEventListener('keydown', function (evt) {
+      window.utils.onEnterEvent(evt, function () {
         openCardPopup(pinElement, rent);
       });
     });

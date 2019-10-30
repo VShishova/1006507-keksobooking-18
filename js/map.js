@@ -10,11 +10,11 @@
   var activePinHeight = mainPin.offsetHeight + pinTaleHeight;
   var mainPinStartCoord = new window.utils.Coordinate(mainPin.offsetLeft, mainPin.offsetTop);
 
-  var MainPinLocation = {
-    MIN_Y: 130 - mainPin.offsetHeight - pinTaleHeight,
-    MAX_Y: 630 - mainPin.offsetHeight - pinTaleHeight,
-    MIN_X: 0 - Math.round(mainPin.offsetWidth / 2),
-    MAX_X: mapSection.querySelector('.map__pins').clientWidth - Math.round(mainPin.offsetWidth / 2)
+  var MainPinCoords = {
+    MIN_Y: window.config.MainPinLocation.MIN_Y - mainPin.offsetHeight - pinTaleHeight,
+    MAX_Y: window.config.MainPinLocation.MAX_Y - mainPin.offsetHeight - pinTaleHeight,
+    MIN_X: window.config.MainPinLocation.MIN_X - Math.round(mainPin.offsetWidth / 2),
+    MAX_X: window.config.MainPinLocation.MAX_X - Math.round(mainPin.offsetWidth / 2)
   };
 
   var mapFiltersForm = mapSection.querySelector('.map__filters');
@@ -56,19 +56,12 @@
     var locationX = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
     var locationY = Math.round(mainPin.offsetTop + (pageActive ? activePinHeight : disabledPinHeight));
 
-    pinAddressInput.readOnly = true;
     pinAddressInput.value = '' + locationX + ', ' + locationY;
   };
 
   var fillPinsListElement = function (rents) {
     var fragment = document.createDocumentFragment();
-
-    while (similarPinsListElement.lastChild) {
-      if (similarPinsListElement.lastChild === mainPin) {
-        break;
-      }
-      similarPinsListElement.removeChild(similarPinsListElement.lastChild);
-    }
+    window.utils.deleteListItems(similarPinsListElement, mainPin);
 
     for (var i = 0; i < rents.length; i++) {
       fragment.appendChild(window.pin.renderPin(rents[i]));
@@ -157,11 +150,11 @@
       newСoords.x = mainPin.offsetLeft - shift.x;
       newСoords.y = mainPin.offsetTop - shift.y;
 
-      if (newСoords.x >= MainPinLocation.MIN_X && newСoords.x <= MainPinLocation.MAX_X) {
+      if (newСoords.x >= MainPinCoords.MIN_X && newСoords.x <= MainPinCoords.MAX_X) {
         mainPin.style.left = newСoords.x + 'px';
       }
 
-      if (newСoords.y >= MainPinLocation.MIN_Y && newСoords.y <= MainPinLocation.MAX_Y) {
+      if (newСoords.y >= MainPinCoords.MIN_Y && newСoords.y <= MainPinCoords.MAX_Y) {
         mainPin.style.top = newСoords.y + 'px';
       }
 
@@ -179,6 +172,7 @@
   };
 
   changePageStateInactive();
+  pinAddressInput.readOnly = true;
 
   mainPin.addEventListener('mousedown', function (evt) {
     if (pageActive) {

@@ -9,20 +9,20 @@
   var timeOutInput = window.map.rentForm.querySelector('#timeout');
 
   var onInputCheckCapacity = function () {
-    if ((capacityInput.value === '0' && roomNumberInput.value !== '100') ||
-        (capacityInput.value !== '0' && roomNumberInput.value === '100') ||
-        (Number(capacityInput.value) > Number(roomNumberInput.value))) {
+    var guestNumber = window.config.roomsToGuests[roomNumberInput.value.toString()];
+
+    if (capacityInput.value < guestNumber.min || capacityInput.value > guestNumber.max) {
       capacityInput.setCustomValidity('Некорректно указано количество мест!');
-      capacityInput.style = 'border-color: red';
+      capacityInput.style = window.config.invalidElementStyle;
     } else {
       capacityInput.setCustomValidity('');
-      capacityInput.style = 'border-color: #d9d9d3';
+      capacityInput.style = window.config.activeValidElementStyle;
     }
     capacityInput.reportValidity();
   };
 
   var onInputCheckPrice = function () {
-    var minPrice = window.utils.typesToPrice[typeInput.value];
+    var minPrice = window.config.typesToMinPrices[typeInput.value];
 
     priceInput.placeholder = minPrice;
     priceInput.min = minPrice;

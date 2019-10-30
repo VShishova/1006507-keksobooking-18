@@ -12,14 +12,8 @@
   };
 
   var checkPriceFilter = function (rentPrice, filterPrice) {
-    switch (filterPrice) {
-      case 'low':
-        return rentPrice < 10000;
-      case 'middle':
-        return rentPrice >= 10000 && rentPrice < 50000;
-      default:
-        return rentPrice >= 50000;
-    }
+    var priceValue = window.utils.pricesToValues[filterPrice];
+    return rentPrice >= priceValue.min && rentPrice < priceValue.max;
   };
 
   var filterRents = function () {
