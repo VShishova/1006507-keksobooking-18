@@ -92,6 +92,17 @@
   };
 
   var successDataSaveHandler = function () {
+    var successInfoElement = window.utils.renderSuccessMessage();
+    mainSection.insertAdjacentElement('afterbegin', successInfoElement);
+
+    document.addEventListener('keydown', onSuccessEscPress);
+    document.addEventListener('click', onSuccessClick);
+
+    resetData();
+    changePageStateInactive();
+  };
+
+  var resetData = function () {
     rentForm.reset();
     mapFiltersForm.reset();
 
@@ -100,14 +111,7 @@
 
     mainPin.style.left = mainPinStartCoord.x + 'px';
     mainPin.style.top = mainPinStartCoord.y + 'px';
-
-    var successInfoElement = window.utils.renderSuccessMessage();
-    mainSection.insertAdjacentElement('afterbegin', successInfoElement);
-
-    document.addEventListener('keydown', onSuccessEscPress);
-    document.addEventListener('click', onSuccessClick);
-
-    changePageStateInactive();
+    fillPinAddress();
   };
 
   var changePageStateInactive = function () {
@@ -117,7 +121,6 @@
     window.utils.disableFormFields(mapFiltersForm, true);
 
     pageActive = false;
-    fillPinAddress();
   };
 
   var changePageStateActive = function () {
@@ -172,6 +175,7 @@
   };
 
   changePageStateInactive();
+  fillPinAddress();
   pinAddressInput.readOnly = true;
 
   mainPin.addEventListener('mousedown', function (evt) {
@@ -191,6 +195,12 @@
   rentForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
     window.data.save(new FormData(rentForm), successDataSaveHandler, errorHandler);
+  });
+
+  rentForm.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    resetData();
+    changePageStateInactive();
   });
 
   window.map = {

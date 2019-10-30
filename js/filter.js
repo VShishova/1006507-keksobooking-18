@@ -13,7 +13,11 @@
 
   var checkPriceFilter = function (rentPrice, filterPrice) {
     var priceValue = window.utils.pricesToValues[filterPrice];
-    return rentPrice >= priceValue.min && rentPrice < priceValue.max;
+    if (priceValue.max) {
+      return rentPrice >= priceValue.min && rentPrice < priceValue.max;
+    } else {
+      return rentPrice >= priceValue.min;
+    }
   };
 
   var filterRents = function () {
