@@ -110,7 +110,7 @@
     }
   };
 
-  var deleteFieldsOutlines = function() {
+  var deleteFieldsOutlines = function () {
     window.map.rentForm.querySelectorAll('input').forEach(function (el) {
       el.style.outline = 'none';
     });
