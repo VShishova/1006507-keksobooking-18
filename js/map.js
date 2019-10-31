@@ -105,6 +105,7 @@
   var resetData = function () {
     rentForm.reset();
     mapFiltersForm.reset();
+    window.pictures.deletePictures();
 
     window.utils.deleteRentCard();
     window.utils.deleteMapPins();
