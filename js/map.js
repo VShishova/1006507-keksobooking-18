@@ -194,15 +194,14 @@
 
   rentForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    rentForm.querySelectorAll('input').forEach(function (el) {
-      el.style.outline = 'none';
-    });
+    window.utils.deleteFieldsOutlines();
     window.data.save(new FormData(rentForm), successDataSaveHandler, errorHandler);
   });
 
   rentForm.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
     evt.preventDefault();
     resetData();
+    window.utils.deleteFieldsOutlines();
     changePageStateInactive();
   });
 
