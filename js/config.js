@@ -30,7 +30,7 @@
     'palace': 10000
   };
 
-  var invalidElementStyle = 'border-color: red';
+  var invalidElementOutlineStyle = '2px solid red';
   var activeValidElementStyle = 'border-color: #d9d9d3';
 
   window.config = {
@@ -42,7 +42,7 @@
     PICTURE_FILE_TYPES: PICTURE_FILE_TYPES,
     roomsToGuests: roomsToGuests,
     typesToMinPrices: typesToMinPrices,
-    invalidElementStyle: invalidElementStyle,
+    invalidElementOutlineStyle: invalidElementOutlineStyle,
     activeValidElementStyle: activeValidElementStyle
   };
 })();

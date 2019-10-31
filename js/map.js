@@ -194,6 +194,9 @@
 
   rentForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
+    rentForm.querySelectorAll('input').forEach(function (el) {
+      el.style.outline = 'none';
+    });
     window.data.save(new FormData(rentForm), successDataSaveHandler, errorHandler);
   });
 

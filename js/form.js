@@ -13,10 +13,10 @@
 
     if (capacityInput.value < guestNumber.min || capacityInput.value > guestNumber.max) {
       capacityInput.setCustomValidity('Некорректно указано количество мест!');
-      capacityInput.style = window.config.invalidElementStyle;
+      capacityInput.style.outline = window.config.invalidElementOutlineStyle;
     } else {
       capacityInput.setCustomValidity('');
-      capacityInput.style = window.config.activeValidElementStyle;
+      capacityInput.style.outline = 'none';
     }
     capacityInput.reportValidity();
   };
@@ -48,8 +48,10 @@
   timeOutInput.addEventListener('input', function () {
     changeTime(timeOutInput, timeInInput);
   });
-  // window.map.rentForm.addEventListener('invalid', function() {
-  //   console.log('тут');
-  //   debugger
-  // }, false)
+  window.map.rentForm.querySelectorAll('input').forEach(function (el) {
+    el.addEventListener('invalid', function () {
+      el.style.outline = window.config.invalidElementOutlineStyle;
+    });
+  });
+
 })();
