@@ -71,9 +71,9 @@
   };
 
   var renderErrorMessage = function (errorMessage) {
-    var similarErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
-    var errorElement = similarErrorTemplate.cloneNode(true);
+    var errorElement = errorTemplateElement.cloneNode(true);
     var errorMessageElement = errorElement.querySelector('.error__message');
     errorMessageElement.textContent = errorMessage;
 
@@ -81,39 +81,33 @@
   };
 
   var renderSuccessMessage = function () {
-    var similarSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-    var successElement = similarSuccessTemplate.cloneNode(true);
+    var successTemplateElement = document.querySelector('#success').content.querySelector('.success');
+    var successElement = successTemplateElement.cloneNode(true);
 
     return successElement;
   };
 
   var deleteRentCard = function () {
-    var rentCard = window.map.mapSection.querySelector('.map__card');
-    if (rentCard) {
-      rentCard.remove();
+    var cardElement = window.map.mapSectionElement.querySelector('.map__card');
+    if (cardElement) {
+      cardElement.remove();
     }
   };
 
   var deleteMapPins = function () {
-    var mapPins = window.map.mapSection.querySelectorAll('.map__pin');
-    for (var i = mapPins.length - 1; i > 0; i--) {
-      mapPins[i].remove();
+    var pinElements = window.map.mapSectionElement.querySelectorAll('.map__pin');
+    for (var i = pinElements.length - 1; i > 0; i--) {
+      pinElements[i].remove();
     }
   };
 
-  var deleteListItems = function (listElement, undeletedFirstElement) {
+  var deleteListItems = function (listElement, undeletedElement) {
     while (listElement.lastChild) {
-      if (listElement.lastChild === undeletedFirstElement) {
+      if (listElement.lastChild === undeletedElement) {
         break;
       }
       listElement.removeChild(listElement.lastChild);
     }
-  };
-
-  var deleteFieldsOutlines = function () {
-    window.map.rentForm.querySelectorAll('input').forEach(function (el) {
-      el.style.outline = 'none';
-    });
   };
 
   window.utils = {
@@ -131,7 +125,6 @@
     deleteRentCard: deleteRentCard,
     deleteMapPins: deleteMapPins,
     debounce: debounce,
-    deleteListItems: deleteListItems,
-    deleteFieldsOutlines: deleteFieldsOutlines
+    deleteListItems: deleteListItems
   };
 })();

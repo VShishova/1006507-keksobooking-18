@@ -1,14 +1,14 @@
 'use strict';
 
 (function () {
-  var mapFiltersForm = document.querySelector('.map__filters');
-  var selectFilterFields = Array.from(mapFiltersForm.querySelectorAll('select'));
-  var features = Array.from(mapFiltersForm.querySelectorAll('[name=features]'));
+  var filtersFormElement = document.querySelector('.map__filters');
+  var selectFields = Array.from(filtersFormElement.querySelectorAll('select'));
+  var features = Array.from(filtersFormElement.querySelectorAll('[name=features]'));
 
   var onFilterInput = function () {
     var filteredRents = filterRents();
     window.utils.deleteRentCard();
-    window.map.fillPinsListElement(filteredRents);
+    window.map.fillPinsList(filteredRents);
   };
 
   var checkPriceFilter = function (rentPrice, filterPrice) {
@@ -21,11 +21,11 @@
   };
 
   var filterRents = function () {
-    var filteredRents = window.map.rentsData.filter(function (rent) {
+    var filteredRents = window.init.rentsData.filter(function (rent) {
       return !!rent.offer && typeof rent.offer === 'object';
     });
 
-    var filters = new FormData(mapFiltersForm);
+    var filters = new FormData(filtersFormElement);
 
     filters.forEach(function (value, key) {
       if (value !== 'any') {
@@ -46,11 +46,12 @@
     return filteredRents.slice(0, window.config.MAX_RENTS_NUMBER);
   };
 
-  features.concat(selectFilterFields).forEach(function (elem) {
+  features.concat(selectFields).forEach(function (elem) {
     elem.addEventListener('input', window.utils.debounce(onFilterInput));
   });
 
   window.filter = {
+    filtersFormElement: filtersFormElement,
     filterRents: filterRents
   };
 })();

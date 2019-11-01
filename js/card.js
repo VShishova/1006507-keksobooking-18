@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var similarCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardTemplateElement = document.querySelector('#card').content.querySelector('.map__card');
 
   var onPopupEscPress = function (evt) {
     window.utils.onEscEvent(evt, closeCardPopup);
@@ -12,23 +12,24 @@
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var fillPopupFeaturesList = function (featuresListElement, featuresList) {
+  var fillPopupFeatures = function (featuresListElement, features) {
     window.utils.deleteListItems(featuresListElement);
-    featuresList.forEach(function (el) {
-      featuresListElement.insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + el + '"></li>');
+    features.forEach(function (el) {
+      var feature = '<li class="popup__feature popup__feature--' + el + '"></li>';
+      featuresListElement.insertAdjacentHTML('beforeend', feature);
     });
   };
 
-  var fillPopupPhotosList = function (photosListElement, photosList) {
-    var similarPopupPhotoImage = photosListElement.children[0];
-    photosListElement.removeChild(similarPopupPhotoImage);
+  var fillPopupPhotos = function (photosListElement, photos) {
+    var pictureTemplateElement = photosListElement.children[0];
+    photosListElement.removeChild(pictureTemplateElement);
 
     var fragment = document.createDocumentFragment();
 
-    photosList.forEach(function (el) {
-      var photoImageElement = similarPopupPhotoImage.cloneNode(true);
-      photoImageElement.src = el;
-      fragment.appendChild(photoImageElement);
+    photos.forEach(function (el) {
+      var pictureElement = pictureTemplateElement.cloneNode(true);
+      pictureElement.src = el;
+      fragment.appendChild(pictureElement);
     });
 
     photosListElement.appendChild(fragment);
@@ -52,8 +53,8 @@
   };
 
   var renderCard = function (card) {
-    var cardElement = similarCardTemplate.cloneNode(true);
-    var rentCardClose = cardElement.querySelector('.popup__close');
+    var cardElement = cardTemplateElement.cloneNode(true);
+    var сardCloseElement = cardElement.querySelector('.popup__close');
 
     var currentElement = cardElement.querySelector('.popup__title');
     if (checkDataField(card.offer, 'title', currentElement)) {
@@ -87,7 +88,7 @@
 
     currentElement = cardElement.querySelector('.popup__features');
     if (checkDataField(card.offer, 'features', currentElement)) {
-      fillPopupFeaturesList(currentElement, card.offer.features);
+      fillPopupFeatures(currentElement, card.offer.features);
     }
 
     currentElement = cardElement.querySelector('.popup__description');
@@ -97,7 +98,7 @@
 
     currentElement = cardElement.querySelector('.popup__photos');
     if (checkDataField(card.offer, 'photos', currentElement)) {
-      fillPopupPhotosList(currentElement, card.offer.photos);
+      fillPopupPhotos(currentElement, card.offer.photos);
     }
 
     currentElement = cardElement.querySelector('.popup__avatar');
@@ -107,9 +108,9 @@
       currentElement.remove();
     }
 
-    rentCardClose.addEventListener('click', closeCardPopup);
-    rentCardClose.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, closeCardPopup);
+    сardCloseElement.addEventListener('click', closeCardPopup);
+    сardCloseElement.addEventListener('keydown', function (evt) {
+      window.utils.onEnterEvent(evt, closeCardPopup);
     });
     document.addEventListener('keydown', onPopupEscPress);
 

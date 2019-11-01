@@ -1,36 +1,39 @@
 'use strict';
 
 (function () {
-  var roomNumberInput = window.map.rentForm.querySelector('#room_number');
-  var capacityInput = window.map.rentForm.querySelector('#capacity');
-  var typeInput = window.map.rentForm.querySelector('#type');
-  var priceInput = window.map.rentForm.querySelector('#price');
-  var timeInInput = window.map.rentForm.querySelector('#timein');
-  var timeOutInput = window.map.rentForm.querySelector('#timeout');
+  var rentFormElement = document.querySelector('.ad-form');
+  var roomNumberlement = rentFormElement.querySelector('#room_number');
+  var capacityElement = rentFormElement.querySelector('#capacity');
+  var typeElement = rentFormElement.querySelector('#type');
+  var priceElement = rentFormElement.querySelector('#price');
+  var timeInElement = rentFormElement.querySelector('#timein');
+  var timeOutElement = rentFormElement.querySelector('#timeout');
+  var tiileElement = rentFormElement.querySelector('#title');
 
   var onInputCheckCapacity = function () {
-    var guestNumber = window.config.roomsToGuests[roomNumberInput.value.toString()];
+    var guestNumber = window.config.roomsToGuests[roomNumberlement.value.toString()];
 
-    if (capacityInput.value < guestNumber.min || capacityInput.value > guestNumber.max) {
-      capacityInput.setCustomValidity('Некорректно указано количество мест!');
-      capacityInput.style.outline = window.config.invalidElementOutlineStyle;
+    if (capacityElement.value < guestNumber.min || capacityElement.value > guestNumber.max) {
+      capacityElement.setCustomValidity('Некорректно указано количество мест!');
+      capacityElement.style.outline = window.config.invalidElementOutlineStyle;
     } else {
-      capacityInput.setCustomValidity('');
-      capacityInput.style.outline = 'none';
+      capacityElement.setCustomValidity('');
+      capacityElement.style.outline = 'none';
     }
-    capacityInput.reportValidity();
+    capacityElement.reportValidity();
   };
 
   var onInputCheckPrice = function () {
-    var minPrice = window.config.typesToMinPrices[typeInput.value];
+    var minPrice = window.config.typesToMinPrices[typeElement.value];
 
-    priceInput.placeholder = minPrice;
-    priceInput.min = minPrice;
+    priceElement.placeholder = minPrice;
+    priceElement.min = minPrice;
 
-    if (priceInput.value < minPrice) {
-      priceInput.setCustomValidity('Для данного типа жилья минимальная цена: ' + minPrice);
+    if (priceElement.value < minPrice) {
+      priceElement.setCustomValidity('Для данного типа жилья минимальная цена: ' + minPrice);
     } else {
-      priceInput.setCustomValidity('');
+      priceElement.setCustomValidity('');
+      priceElement.style.outline = 'none';
     }
   };
 
@@ -38,20 +41,39 @@
     changeField.value = recentField.value;
   };
 
-  roomNumberInput.addEventListener('input', onInputCheckCapacity);
-  capacityInput.addEventListener('input', onInputCheckCapacity);
-  typeInput.addEventListener('input', onInputCheckPrice);
-  priceInput.addEventListener('blur', onInputCheckPrice);
-  timeInInput.addEventListener('input', function () {
-    changeTime(timeInInput, timeOutInput);
+  roomNumberlement.addEventListener('input', onInputCheckCapacity);
+  capacityElement.addEventListener('input', onInputCheckCapacity);
+  typeElement.addEventListener('input', onInputCheckPrice);
+  priceElement.addEventListener('blur', onInputCheckPrice);
+  timeInElement.addEventListener('input', function () {
+    changeTime(timeInElement, timeOutElement);
   });
-  timeOutInput.addEventListener('input', function () {
-    changeTime(timeOutInput, timeInInput);
+  timeOutElement.addEventListener('input', function () {
+    changeTime(timeOutElement, timeInElement);
   });
-  window.map.rentForm.querySelectorAll('input').forEach(function (el) {
+  tiileElement.addEventListener('input', function () {
+    if (tiileElement.validity.valid) {
+      tiileElement.style.outline = 'none';
+    }
+  });
+  rentFormElement.querySelectorAll('input').forEach(function (el) {
     el.addEventListener('invalid', function () {
       el.style.outline = window.config.invalidElementOutlineStyle;
     });
   });
 
+  rentFormElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.data.save(new FormData(rentFormElement), window.init.onSuccessSave, window.init.onError);
+  });
+
+  rentFormElement.querySelector('.ad-form__reset').addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.init.resetData();
+    window.init.changePageStateInactive();
+  });
+
+  window.form = {
+    rentFormElement: rentFormElement
+  };
 })();

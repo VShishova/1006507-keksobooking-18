@@ -31,7 +31,6 @@
   };
 
   var invalidElementOutlineStyle = '2px solid red';
-  var activeValidElementStyle = 'border-color: #d9d9d3';
 
   window.config = {
     URL: URL,
@@ -42,7 +41,6 @@
     PICTURE_FILE_TYPES: PICTURE_FILE_TYPES,
     roomsToGuests: roomsToGuests,
     typesToMinPrices: typesToMinPrices,
-    invalidElementOutlineStyle: invalidElementOutlineStyle,
-    activeValidElementStyle: activeValidElementStyle
+    invalidElementOutlineStyle: invalidElementOutlineStyle
   };
 })();
