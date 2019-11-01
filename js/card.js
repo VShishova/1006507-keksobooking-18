@@ -38,7 +38,7 @@
   var checkDataField = function (data, fieldName, element) {
     var isCorrect = false;
 
-    if (!!data[fieldName] &&
+    if (data[fieldName] &&
         (typeof data[fieldName] === 'string' && data[fieldName].length > 0) ||
         (data[fieldName] instanceof Array && data[fieldName].length > 0) ||
         typeof data[fieldName] === 'number') {

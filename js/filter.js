@@ -22,7 +22,7 @@
 
   var filterRents = function () {
     var filteredRents = window.init.rentsData.filter(function (rent) {
-      return !!rent.offer && typeof rent.offer === 'object';
+      return rent.offer && typeof rent.offer === 'object';
     });
 
     var filters = new FormData(filtersFormElement);
