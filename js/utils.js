@@ -110,6 +110,12 @@
     }
   };
 
+  var clearFieldsOutlines = function () {
+    window.form.rentFormElement.querySelectorAll('input').forEach(function (el) {
+      el.style.outline = 'none';
+    });
+  };
+
   window.utils = {
     SUCCESS_CODE: SUCCESS_CODE,
     typesToNames: typesToNames,
@@ -125,6 +131,7 @@
     deleteRentCard: deleteRentCard,
     deleteMapPins: deleteMapPins,
     debounce: debounce,
-    deleteListItems: deleteListItems
+    deleteListItems: deleteListItems,
+    clearFieldsOutlines: clearFieldsOutlines
   };
 })();

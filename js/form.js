@@ -71,6 +71,7 @@
     evt.preventDefault();
     window.init.resetData();
     window.init.changePageStateInactive();
+    window.utils.clearFieldsOutlines();
   });
 
   window.form = {
