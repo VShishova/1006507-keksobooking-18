@@ -56,56 +56,70 @@
     var cardElement = cardTemplateElement.cloneNode(true);
     var сardCloseElement = cardElement.querySelector('.popup__close');
 
-    var currentElement = cardElement.querySelector('.popup__title');
-    if (checkDataField(card.offer, 'title', currentElement)) {
-      currentElement.textContent = card.offer.title;
-    }
+    var offerKeys = [
+      'title', 'address', 'price', 'description', 'photos', 'description', 'features', 'type', 'rooms', 'checkin'
+    ];
 
-    currentElement = cardElement.querySelector('.popup__text--address');
-    if (checkDataField(card.offer, 'address', currentElement)) {
-      currentElement.textContent = card.offer.address;
-    }
+    var mapToClassName = function (key) {
+      switch (key) {
+        case 'price':
+        case 'address':
+        case 'capacity':
+        case 'time':
+          return '.popup__text--' + key;
+        case 'rooms':
+          return '.popup__text--capacity';
+        case 'checkin':
+          return '.popup__text--time';
+        default:
+          return '.popup__' + key;
+      }
+    };
 
-    currentElement = cardElement.querySelector('.popup__text--price');
-    if (checkDataField(card.offer, 'price', currentElement)) {
-      currentElement.textContent = card.offer.price + '₽/ночь';
-    }
+    var element;
+    var selector;
+    var isElementCorrect;
 
-    currentElement = cardElement.querySelector('.popup__type');
-    if (checkDataField(card.offer, 'type', currentElement)) {
-      currentElement.textContent = window.utils.typesToNames[card.offer.type];
-    }
+    offerKeys.forEach(function (key) {
+      selector = mapToClassName(key);
+      element = cardElement.querySelector(selector);
+      isElementCorrect = checkDataField(card.offer, key, element);
 
-    currentElement = cardElement.querySelector('.popup__text--capacity');
-    if (checkDataField(card.offer, 'rooms', currentElement) && checkDataField(card.offer, 'guests', currentElement)) {
-      currentElement.textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
-    }
+      if (isElementCorrect) {
+        switch (key) {
+          case 'photos':
+            fillPopupPhotos(element, card.offer[key]);
+            break;
+          case 'features':
+            fillPopupFeatures(element, card.offer[key]);
+            break;
+          case 'type':
+            element.textContent = window.utils.typesToNames[card.offer[key]];
+            break;
+          case 'price':
+            element.textContent = card.offer[key] + '₽/ночь';
+            break;
+          case 'rooms':
+            if (checkDataField(card.offer, 'guests', element)) {
+              element.textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+            }
+            break;
+          case 'checkin':
+            if (checkDataField(card.offer, 'checkout', element)) {
+              element.textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+            }
+            break;
+          default:
+            element.textContent = card.offer[key];
+        }
+      }
+    });
 
-    currentElement = cardElement.querySelector('.popup__text--time');
-    if (checkDataField(card.offer, 'checkin', currentElement) && checkDataField(card.offer, 'checkout', currentElement)) {
-      currentElement.textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
-    }
-
-    currentElement = cardElement.querySelector('.popup__features');
-    if (checkDataField(card.offer, 'features', currentElement)) {
-      fillPopupFeatures(currentElement, card.offer.features);
-    }
-
-    currentElement = cardElement.querySelector('.popup__description');
-    if (checkDataField(card.offer, 'description', currentElement)) {
-      currentElement.textContent = card.offer.description;
-    }
-
-    currentElement = cardElement.querySelector('.popup__photos');
-    if (checkDataField(card.offer, 'photos', currentElement)) {
-      fillPopupPhotos(currentElement, card.offer.photos);
-    }
-
-    currentElement = cardElement.querySelector('.popup__avatar');
+    element = cardElement.querySelector('.popup__avatar');
     try {
-      currentElement.src = card.author.avatar;
+      element.src = card.author.avatar;
     } catch (err) {
-      currentElement.remove();
+      element.remove();
     }
 
     сardCloseElement.addEventListener('click', closeCardPopup);
