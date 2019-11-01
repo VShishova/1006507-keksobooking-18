@@ -64,7 +64,6 @@
       switch (key) {
         case 'price':
         case 'address':
-        case 'capacity':
         case 'time':
           return '.popup__text--' + key;
         case 'rooms':
