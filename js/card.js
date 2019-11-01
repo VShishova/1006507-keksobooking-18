@@ -57,7 +57,7 @@
     var сardCloseElement = cardElement.querySelector('.popup__close');
 
     var offerKeys = [
-      'title', 'address', 'price', 'description', 'photos', 'description', 'features', 'type', 'rooms', 'checkin'
+      'title', 'address', 'price', 'photos', 'description', 'features', 'type', 'rooms', 'checkin'
     ];
 
     var mapToClassName = function (key) {
